@@ -157,25 +157,29 @@
     </style>
 </head>
 <body>
-
     <div class="header">
-        <span class="shrimp-icon">🦐</span>
-        <h1 class="header-title">Shrimpers Snake</h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span class="shrimp-icon">🦐</span>
+            <h1 class="header-title">Shrimpers Snake</h1>
+        </div>
+        <div class="creator-credit">
+            Created by <a href="https://twitter.com/Aiman_Asril" target="_blank">@EmanLutfy</a>
+        </div>
     </div>
-
+    
     <div id="game-container">
         <div class="score-panel">
-            <div class="score-item">Score: <span id="score-value">0</span> 🔥</div>
-            <div class="score-item">High Score : <span id="high-score-value">0</span> 🔥</div>
+            <div class="score-item">Score: <span id="score-value">0</span> 🍒 </div>
+            <div class="score-item">High Score : <span id="high-score-value">0</span> 🍒 </div>
         </div>
         <canvas id="gameCanvas" width="400" height="400"></canvas>
     </div>
     
     <div id="overlay">
         <div class="overlay-content">
-            <h2 class="overlay-title">Ready To Catch Shrimpers? </h2>
-            <p class="overlay-text">Use your arrow key to play . Avoid Wall And Keep Eating Cherry to Shrimpers!</p>
-            <button class="start-button" id="start-button">Game Start !</button>
+            <h2 class="overlay-title">Ready To Shrimps ? 🦐  </h2>
+            <p class="overlay-text">Use Arrow Keys  To Play . Keep Eating Cherry to Shrimp!</p>
+            <button class="start-button" id="start-button">Start Game</button>
         </div>
     </div>
 
