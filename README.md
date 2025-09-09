@@ -1,5 +1,5 @@
 # Shrimpers-Snake 🦐
-**A simple classis snake game but its "Shrimpers" **
+**A simple classis snake game but its "Shrimpers"**
 
 Shrimpers-Snake is a straightforward and addictive take on the timeless arcade classic. 
 
