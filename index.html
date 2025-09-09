@@ -64,7 +64,7 @@
             color: #b0b0b0;
             margin-top: 5px;
         }
-        
+
         .creator-credit a {
             color: #ff69b4;
             text-decoration: none;
@@ -179,59 +179,6 @@
             background: linear-gradient(45deg, #8a2be2, #ff69b4);
         }
 
-        .mobile-controls {
-            display: none;
-            margin-top: 20px;
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .mobile-controls .row {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .mobile-controls .row:first-child {
-            justify-content: center;
-        }
-
-        .mobile-controls .row:nth-child(2) {
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        .mobile-btn {
-            background-color: #3b4c68;
-            color: #fff;
-            border: 2px solid #5d7594;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 2em;
-            font-weight: 700;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-            transition: background-color 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .mobile-btn:active {
-            background-color: #5d7594;
-            transform: scale(0.95);
-        }
-
-        /* Show mobile controls on small screens */
-        @media (max-width: 600px) {
-            .mobile-controls {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-        }
     </style>
 </head>
 <body>
@@ -241,7 +188,7 @@
             <h1 class="header-title">Shrimpers Snake</h1>
         </div>
         <div class="creator-credit">
-            Created by <a href="x mccril" target="_blank">@EmanLutfy</a>
+            Created by <a href="https://twitter.com/Aiman_Asril" target="_blank">@ EmanLutfy</a>
         </div>
     </div>
     
@@ -261,20 +208,6 @@
         </div>
     </div>
 
-    <!-- Mobile Controls -->
-    <div class="mobile-controls">
-        <div class="row">
-            <button class="mobile-btn" id="up-btn">↑</button>
-        </div>
-        <div class="row">
-            <button class="mobile-btn" id="left-btn">←</button>
-            <button class="mobile-btn" id="right-btn">→</button>
-        </div>
-        <div class="row">
-            <button class="mobile-btn" id="down-btn">↓</button>
-        </div>
-    </div>
-
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -282,12 +215,6 @@
         const startButton = document.getElementById('start-button');
         const scoreValue = document.getElementById('score-value');
         const highScoreValue = document.getElementById('high-score-value');
-
-        // New mobile button elements
-        const upBtn = document.getElementById('up-btn');
-        const downBtn = document.getElementById('down-btn');
-        const leftBtn = document.getElementById('left-btn');
-        const rightBtn = document.getElementById('right-btn');
 
         let gameRunning = false;
         let score = 0;
@@ -420,31 +347,6 @@
             }
             direction = newDirection;
             isChangingDirection = true;
-        });
-
-        // Event listeners for mobile buttons
-        upBtn.addEventListener('click', () => {
-            if (direction.y === 1) return;
-            newDirection = { x: 0, y: -1 };
-            direction = newDirection;
-        });
-
-        downBtn.addEventListener('click', () => {
-            if (direction.y === -1) return;
-            newDirection = { x: 0, y: 1 };
-            direction = newDirection;
-        });
-
-        leftBtn.addEventListener('click', () => {
-            if (direction.x === 1) return;
-            newDirection = { x: -1, y: 0 };
-            direction = newDirection;
-        });
-
-        rightBtn.addEventListener('click', () => {
-            if (direction.x === -1) return;
-            newDirection = { x: 1, y: 0 };
-            direction = newDirection;
         });
 
         // Event listener untuk butang mula
