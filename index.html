@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permainan Udang</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body {
+            background: radial-gradient(circle at center, #2e3b55, #1a1a2e);
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #2c2c54, #474787);
+            padding: 18px 35px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+        }
+
+        .header-title {
+            font-size: 2.8em;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .shrimp-icon {
+            font-size: 3em;
+            filter: drop-shadow(0 0 8px #ff69b4);
+        }
+
+        #game-container {
+            position: relative;
+            background-color: #212c40;
+            border: 2px solid #5d7594;
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #gameCanvas {
+            border-radius: 12px;
+            display: block;
+            background-color: #1a2333;
+            border: 2px solid #4a596e;
+        }
+
+        .score-panel {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .score-item {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background-color: #3b4c68;
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .score-item:hover {
+            transform: translateY(-2px);
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            transition: opacity 0.6s ease;
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, #474787, #2c2c54);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            border: 2px solid #ff69b4;
+        }
+
+        .overlay-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        .overlay-text {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #c0c0c0;
+        }
+
+        .start-button {
+            font-size: 1.5em;
+            font-weight: 600;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ff69b4, #8a2be2);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #8a2be2, #ff69b4);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <span class="shrimp-icon">🦐</span>
+        <h1 class="header-title">Shrimpers Snake</h1>
+    </div>
+
+    <div id="game-container">
+        <div class="score-panel">
+            <div class="score-item">Score: <span id="score-value">0</span> 🔥</div>
+            <div class="score-item">High Score : <span id="high-score-value">0</span> 🔥</div>
+        </div>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </div>
+    
+    <div id="overlay">
+        <div class="overlay-content">
+            <h2 class="overlay-title">Ready To Catch Shrimpers? </h2>
+            <p class="overlay-text">Use your arrow key to play . Avoid Wall And Keep Eating Cherry to Shrimpers!</p>
+            <button class="start-button" id="start-button">Game Start !</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('overlay');
+        const startButton = document.getElementById('start-button');
+        const scoreValue = document.getElementById('score-value');
+        const highScoreValue = document.getElementById('high-score-value');
+
+        let gameRunning = false;
+        let score = 0;
+        let highScore = localStorage.getItem('shrimpHighScore') || 0;
+        highScoreValue.textContent = highScore;
+
+        // Saiz grid permainan
+        const gridSize = 20;
+        const tileCount = canvas.width / gridSize;
+
+        // Objek untuk udang (pemain)
+        let shrimp = { x: 10, y: 10 };
+        let direction = { x: 0, y: 0 };
+        let newDirection = { x: 0, y: 0 };
+        let isChangingDirection = false;
+
+        // Objek untuk makanan udang
+        let food = {};
+
+        // Fungsi untuk menetapkan semula permainan
+        function resetGame() {
+            score = 0;
+            scoreValue.textContent = score;
+            shrimp = { x: 10, y: 10 };
+            direction = { x: 0, y: 0 };
+            newDirection = { x: 0, y: 0 };
+            placeFood();
+        }
+
+        // Fungsi untuk meletakkan makanan di lokasi rawak
+        function placeFood() {
+            food = {
+                x: Math.floor(Math.random() * tileCount),
+                y: Math.floor(Math.random() * tileCount)
+            };
+            // Pastikan makanan tidak berada di lokasi udang
+            if (shrimp.x === food.x && shrimp.y === food.y) {
+                placeFood();
+            }
+        }
+
+        // Fungsi untuk melukis semua elemen pada kanvas
+        function draw() {
+            // Lukis latar belakang
+            ctx.fillStyle = '#1a2333';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Lukis makanan (menggunakan emoji ceri)
+            const foodEmoji = '🍒';
+            ctx.font = `${gridSize}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(foodEmoji, food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
+
+            // Lukis udang (pemain) menggunakan emoji
+            const shrimpEmoji = '🦐';
+            ctx.font = `${gridSize}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(shrimpEmoji, shrimp.x * gridSize + gridSize / 2, shrimp.y * gridSize + gridSize / 2);
+        }
+
+        // Fungsi untuk mengemas kini logik permainan
+        function update() {
+            if (!gameRunning) return;
+
+            // Udang bergerak
+            isChangingDirection = false;
+            shrimp.x += direction.x;
+            shrimp.y += direction.y;
+
+            // Perlanggaran dengan dinding
+            if (shrimp.x < 0 || shrimp.x >= tileCount || shrimp.y < 0 || shrimp.y >= tileCount) {
+                endGame();
+                return;
+            }
+
+            // Jika udang makan makanan
+            if (shrimp.x === food.x && shrimp.y === food.y) {
+                score++;
+                scoreValue.textContent = score;
+                placeFood();
+            }
+        }
+
+        // Fungsi untuk menamatkan permainan
+        function endGame() {
+            gameRunning = false;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('shrimpHighScore', highScore);
+                highScoreValue.textContent = highScore;
+            }
+            overlay.style.display = 'flex'; 
+            document.querySelector('.overlay-title').textContent = `Game Over!`;
+            document.querySelector('.overlay-text').textContent = `Final Score : ${score}. Click Retry to Start Again`;
+            startButton.textContent = 'Retry';
+        }
+
+        // Gelung utama permainan
+        function gameLoop() {
+            if (gameRunning) {
+                update();
+                draw();
+                // Kelajuan meningkat dengan skor
+                setTimeout(gameLoop, 1000 / (10 + score));
+            }
+        }
+
+        // Mendengar input kekunci
+        document.addEventListener('keydown', (e) => {
+            if (isChangingDirection) return;
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (direction.y === 1) return;
+                    newDirection = { x: 0, y: -1 };
+                    break;
+                case 'ArrowDown':
+                    if (direction.y === -1) return;
+                    newDirection = { x: 0, y: 1 };
+                    break;
+                case 'ArrowLeft':
+                    if (direction.x === 1) return;
+                    newDirection = { x: -1, y: 0 };
+                    break;
+                case 'ArrowRight':
+                    if (direction.x === -1) return;
+                    newDirection = { x: 1, y: 0 };
+                    break;
+            }
+            direction = newDirection;
+            isChangingDirection = true;
+        });
+
+        // Event listener untuk butang mula
+        startButton.addEventListener('click', () => {
+            gameRunning = true;
+            overlay.style.display = 'none'; 
+            resetGame();
+            gameLoop();
+        });
+
+        // Memastikan permainan dilukis semasa halaman dimuatkan
+        window.onload = function() {
+            draw();
+            placeFood();
+        };
+
+    </script>
+</body>
+</html>
